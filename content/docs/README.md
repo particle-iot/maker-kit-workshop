@@ -23,11 +23,13 @@ This site contains in-depth lab documents that complement in-person presentation
 
 - Chapter 1: Claiming your Particle Device
   - Unbox a brand new Photon, claim it to your Particle account, and make it light up with Tinker.
-- Chapter 2: Get your badge to blinky!
-  - Read simple sensors included on your badge, and update the display with sensor data
-- Chapter 3: Input and sensor basics
-  - Explore and interact with more of the sensors on your badge
-- Chapter 4: Going beyond devices!
-  - Leverage the Particle Device OS and Cloud to integrate with 3rd party services and pipe sensor data into Azure IoT Hub.
+- Chapter 2: Reading from sensors and posting data to the cloud!
+  - Read simple sensors included in the maker kit, and post data to the Particle Device cloud.
+- Chapter 3: Connecting the Particle Device Cloud to Azure
+  - Wire your Photon up to the Azure IoT Hub
+- Chapter 4: Visualizing sensor data in the cloud
+  - Vizualize sensor data in Azure
+- Chapter 5: Controlling your devices from the cloud
+  - Process sensor data in the cloud and use that data to control an LED connected to your Photon
 
 ---
