@@ -66,7 +66,7 @@ Now we can complete setting up this integration from the Particle Console.
 
 ![](./images/03/setup-required.png)
 
-5.  Now we need to add an event we cant to capture, and some of the details from our event hub. For the event name, use `env-sensors`. The "IoT Hub Name" should be the unique name you used earlier. The "Shared Policy Name" will be `workshop-policy` and the "Shared Policy Key" is the primary key you copied in step #10.
+5.  Now we need to add an event we cant to capture, and some of the details from our event hub. For the event name, use `temp`, which is the name of the publish event we set-up in the last module. The "IoT Hub Name" should be the unique name you used earlier. The "Shared Policy Name" will be `workshop-policy` and the "Shared Policy Key" is the primary key you copied in step #10. In the Device dropdown, select the name of your Photon.
 
 ![](./images/03/integration-details.png)
 
@@ -74,15 +74,15 @@ Now we can complete setting up this integration from the Particle Console.
 
 ![](./images/03/view-int.png)
 
-7.  Click the "Test" button. If you see a timeout like the second image below, try running another test. You should see a green success message in the bottom right corner of the screen.
+7. Since we've already added the `temp` event, after a few seconds, we should be able to confirm that the integration works. Refresh the integration page and scroll down to the `Logs` section. You should see one or more entries in the list.
 
-![](./images/03/test-int.png)
+![](./images/03/logs.png)
 
-![](./images/03/timed-out.png)
+8. Click on one of the logs to view the request, in detail.
 
-![](./images/03/test-success.png)
+![](./images/03/eventlog.png)
 
-8.  To verify that your integration worked, go back to your Azure IoT Hub and click on the "IoT Devices" menu item. If you see a single device in the list with the ID "api" you're good to go.
+9. To verify that your integration worked, go back to your Azure IoT Hub and click on the "IoT Devices" menu item. If you see a single device in the list with the ID "api" you're good to go.
 
 ![](./images/03/iot-devices.png)
 
