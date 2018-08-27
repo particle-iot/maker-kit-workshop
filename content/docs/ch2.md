@@ -6,7 +6,7 @@
 | **Tools you’ll need**       | build.particle.io, console.particle.io, a Particle Photon and Maker Kit                        |
 | **Time needed to complete** | 15 minutes                                                                                     |
 
-In this session, we're going to explore the Particle ecosystem via a Photon and Maker Kit. If you get stuck at any point, [click here]() for the completed source.
+In this session, we're going to explore the Particle ecosystem via a Photon and Maker Kit. If you get stuck at any point, [click here](https://go.particle.io/shared_apps/5b84477c9a93dd475a0002fa) for the completed source.
 
 ## Wire up the temperature sensor to your Photon
 
@@ -165,7 +165,9 @@ void loop() {
 }
 ```
 
+::: tip
 In an embedded application, we light up an LED by calling `digitalWrite` ane setting the pin `HIGH`, meaning we're applying a voltage to the pin, which supplies that voltage to the LED. We then take the temperature reading. Then, we introduce a one second delay so that the status light is on long enough to be human-observable. Once the delay elapses, we turn the LED off by calling `digitalWrite` again and set the pin to `LOW`, which turns off voltage to the pin and thus, the LED.
+:::
 
 7. Now, let's flash this firmware to your device. Click the target icon in the left menu to open the Devices tab.
 
@@ -184,3 +186,122 @@ In an embedded application, we light up an LED by calling `digitalWrite` ane set
 ## Add Particle primitives to your app
 
 Flashing an LED when we take a temperature reading is ok, but wouldn't it be nice if we could actually see the temperature readings we've taken somehow? With Particle Device Cloud primitives, we can do just that. First, we're going to expose our temperature variable to the Device Cloud, then we'll introduce a function for triggering device readings on-demand. Finally, we'll publish an event each time a reading is taken so that other apps can subscribe to the sensor data our device is collecting!
+
+### Adding a Variable
+
+1. In the `setup` function, add a `Particle.variable`. This class method tells the Particle device cloud that a variable named `tempF` should be created to hold the current value of the `temp` variable in our sketch.
+
+```cpp
+Particle.variable("tempF", temp);
+```
+
+2. Click the flash icon to load the latest firmware. After your device resets, navigate to [console.particle.io](https://console.particle.io) and select your Photon. This will bring up the dashboard for your device, which shows events, device vitals, and more.
+
+![](./images/02/devicePage.png)
+
+3. On the right side of your device dashboard, you'll notice two boxes for Functions and Variables. We haven't added a function yet, but you should see `tempF` listed under variables.
+
+![](./images/02/primitivesList.png)
+
+4. Click on the `Get` button and you should see a value returned. You're reading a sensor value from the Internet!
+
+![](./images/02/tempVar.png)
+
+### Adding a Function
+
+5. Now let's add a function that we can call to check the temperature reading, on demand. Along the way, we're going to clean up our existing code a bit. Start by adding the following to the top of your file, just after the `#include`:
+
+```cpp
+#define TEMP_CHECK_INTERVAL 10000
+```
+
+::: tip
+`#define` is a text substitution pre-processor directive. It tells the compiler to replace every instance of a text value (on the left) with another value (on the right). In the case above, anywhere we use `TEMP_CHECK_INTERVAL` will be replaced with the number `10000`. It's like using a constant, except we're not using any memory in allocating a variable for the program!
+:::
+
+6. Next, let's add a new variable we can use to track the last time we checked the temperature. Add the following line right after our `temp` variable.
+
+```cpp
+unsigned long lastTempCheck = 0;
+```
+
+7. Now, lets add a function for checking the temperature, since we'll end up needing this in a few places. Just before the `setup` function, add a new `checkTemp` function.
+
+```cpp
+void checkTemp() {
+  if (tempSensor.read()) {
+    temp = (tempSensor.fahrenheit() * 100) / 100;
+  }
+}
+```
+
+8. Next, we need to clean up our loop a bit. We were using `delay` previously to pause execution between checks, but this isn't ideal because it blocks program execution. A better way to manage delays between actions in an embedded system is to use `millis()` and timing variables, like the ones we added earlier. `millis()` returns the number of milliseconds that have elapsed since your program started running, and it can be very useful when you need to manage time intervals.
+
+Change your `loop` to look like the following:
+
+```cpp
+void loop() {
+  if (lastTempCheck + TEMP_CHECK_INTERVAL < millis()) {
+    lastTempCheck = millis();
+    checkTemp();
+  }
+}
+```
+
+The `if` statement is checking to see how long its been since we took a temperature reading. Basically, if 10 seconds have elapsed (our `TEMP_CHECK_INTERVAL` value), we'll set the `lastTempCheck` to a new value and then check the temperature sensor.
+
+9. Since our first temp check won't happen in the first 10 seconds, we can add an initial check to our `setup`.
+
+```cpp{4}
+void setup() {
+  Particle.variable("tempF", temp);
+
+  checkTemp();
+}
+```
+
+10. Now we can add our cloud function. `Particle.function` expects a name and a local function that will handle calls from the Device Cloud. Add the following to your `setup` function.
+
+```cpp
+Particle.function("checkTemp", checkHandler);
+```
+
+11. And, finally, we'll add the function. All functions to be used as cloud functions _MUST_ return an `int` and take a single `String` parameter, which is why the signature is different than our `checkTemp` function.
+
+```cpp
+int checkHandler(String command) {
+  checkTemp();
+
+  return 1;
+}
+```
+
+::: tip
+For the same of clarity, we've wrapped the existing `checkTemp` function in our cloud function handler. How could you refactor this so we've only have one helper function for local calls and the device cloud?
+:::
+
+12. Now, flash the firmware to your device and head back to the console. Refresh your device screen and you should now see your `checkTemp` function.
+
+![](./images/02/newFunc.png)
+
+13. Click on `Call` to execute the function. Then, click `Get` next to the `tempF` variable to see the result.
+
+![](./images/02/callFunc.png)
+
+### Publishing an event
+
+Before we move on, let's explore one more Particle primitive, `publish`, which allows us to fire events that we can subscribe to from other devices, web and mobile apps, or stream into cloud services like Azure!
+
+14. Each time we check the temp, we want to publish an event for all subscribers. `Particle.publish` makes this easy. Add the following to your `checkTemp` function, inside the `if` statement.
+
+```cpp
+Particle.publish("temp", String(temp), PRIVATE);
+```
+
+15. And that's all you need to do to publish events! Flash the firmware to your device go back to your device page in the Console. In the event logs, you'll see new temp events come across every ten seconds.
+
+![](./images/02/eventlist.png)
+
+---
+
+Congratulations on getting your devices connected to the Particle Device Cloud! Now we're ready to take our exploration further and get our sensor data into Azure!
