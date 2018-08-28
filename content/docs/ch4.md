@@ -16,13 +16,13 @@ In this exercise, we're going to send data from IoT Hub to Power BI. When we do 
 
 ![](./images/04/iot-hub-events.png)
 
-1. Add a new Consumer Group. Call it "stream". Click the "Save" button at the top.
+2. Add a new Consumer Group. Call it "stream". Click the "Save" button at the top.
 
 ![](./images/04/new-consumer-group.png)
 
 ## Setting Up Stream Analytics
 
-2. Create a new Stream Analytics Job in the Azure Portal
+1. Create a new Stream Analytics Job in the Azure Portal
 
 ![](./images/04/new-stream-analytics.png)
 
@@ -30,31 +30,31 @@ In this exercise, we're going to send data from IoT Hub to Power BI. When we do 
 
 ![](./images/04/new-stream-analytics-settings.png)
 
-2. Once the resource is created, you can click on the bell in the right-hand corner to access it. It's also a good idea to pin it to the dashboard at this time.
+3. Once the resource is created, you can click on the bell in the right-hand corner to access it. It's also a good idea to pin it to the dashboard at this time.
 
 ![](./images/04/go-to-resource-pin-to-dashboard.png)
 
-2. Under the section "Job Topology", select "inputs"
+4. Under the section "Job Topology", select "inputs"
 
 ![](./images/04/job-topology-inputs.png)
 
-2. Click on "Add Stream Input" and select "IoT Hub"
+5. Click on "Add Stream Input" and select "IoT Hub"
 
 ![](./images/04/add-stream-input.png)
 
-2. Name it "iothub". Select the correct IoT Hub from your subscription. Change the "Shared access policy name" to the policy you created in Chapter 3. Change the "Consumer Group" to the group you created in the first part of this chapter. Click "Save"
+6. Name it "iothub". Select the correct IoT Hub from your subscription. Change the "Shared access policy name" to the policy you created in Chapter 3. Change the "Consumer Group" to the group you created in the first part of this chapter. Click "Save"
 
 ![](./images/04/new-input.png)
 
-2. Under the "Job Topology" section, select "Outputs". Click the "Add" button and select "Power BI" from the dropdown list.
+7. Under the "Job Topology" section, select "Outputs". Click the "Add" button and select "Power BI" from the dropdown list.
 
 ![](./images/04/new-output.png)
 
-2. Name it "powerbi". You will need to authorize the Azure Portal to Power BI at this point. Once you have done that, you can use the "My Workspace" Group Workspace. Name the Dataset "Photon Data" and the table "Temperature".
+8. Name it "powerbi". You will need to authorize the Azure Portal to Power BI at this point. Once you have done that, you can use the "My Workspace" Group Workspace. Name the Dataset "Photon Data" and the table "Temperature".
 
 ![](./images/04/new-output.png)
 
-2. Click on the "Query" option under "Job Topology". Enter the following query...
+9. Click on the "Query" option under "Job Topology". Enter the following query...
 
 ```sql
 SELECT
@@ -72,15 +72,15 @@ Don't forget to click "Save".
 
 ![](./images/04/alter-query.png)
 
-2. Click on the "Overview" item and click the "Start" button to start the Stream Analytics job.
+10. Click on the "Overview" item and click the "Start" button to start the Stream Analytics job.
 
 ![](./images/04/overview-start-start.png)
 
 ## Create a Live Streaming Power BI Dashboard
 
-3. Log in to Power BI at [powerbi.microsoft.com](powerbi.microsoft.com)
+1. Log in to Power BI at [powerbi.microsoft.com](powerbi.microsoft.com)
 
-4. Click on the "My Workspace" section in the sidebar. Click the + button in the corner to create a new dashboard.
+2. Click on the "My Workspace" section in the sidebar. Click the + button in the corner to create a new dashboard.
 
 ![](./images/04/create-dashboard.png)
 
@@ -88,19 +88,19 @@ Don't forget to click "Save".
 
 ![](./images/04/dashboard-name.png)
 
-3. Click the "Add Tile" button
+4. Click the "Add Tile" button
 
 ![](./images/04/add-tile.png)
 
-3. Scroll down on the right-hand side and select "Custom Streaming Data". Then select "Photon Data". Click "Next".
+5. Scroll down on the right-hand side and select "Custom Streaming Data". Then select "Photon Data". Click "Next".
 
 ![](./images/04/photon-dataset.png)
 
-3. Select the "Line chart" visualisation type. For the "Axis", click "Add value" and select "published". Scroll down a little further to the next "Value" field and select "Temperature". Then click "Next".
+6. Select the "Line chart" visualisation type. For the "Axis", click "Add value" and select "published". Scroll down a little further to the next "Value" field and select "Temperature". Then click "Next".
 
 ![](./images/04/custom-streaming-tile.png)
 
-3. Add any tile details you like and click "Apply"
+7. Add any tile details you like and click "Apply"
 
 ![](./images/04/tile-details.png)
 
