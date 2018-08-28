@@ -21,15 +21,15 @@ To build this circuit, you'll need the following items:
 
 ![](./images/02/resistors.jpg)
 
-1. Connect the temperature sensor to three side-by-side rows in the breadboard. You can use column f, rows 28-30, as depicted below, or another three of your choosing.
+1. Connect the temperature sensor to three side-by-side rows in the breadboard. You can use column F, rows 28-30, as depicted below, or another three of your choosing.
 
 ::: warning
-If you pick your own location, be sure to connect the three wires in separate rows and _NOT_ separate columns on the same row as columns on a breadboard are electrically connected!
+If you pick your own location, be sure to connect the three wires in separate rows and _NOT_ separate columns on the same row as rows on a breadboard are electrically connected!
 :::
 
 ![](./images/02/01-connectsensor.jpg)
 
-2. Connect the resistor between the yellow and red wires of the temperature sensor. In the image below, the resistor is plugged into column h, rows 28 and 29.
+2. Connect the resistor between the yellow and red wires of the temperature sensor. In the image below, the resistor is plugged into column H, rows 28 and 29.
 
 ![](./images/02/02-connectresistor.jpg)
 
@@ -143,7 +143,7 @@ void loop() {
 }
 ```
 
-5. Before we move on, let's also use the onboard LED wired to pin D7. First, we'll use the `pinMode` function to denote that a given pin--`D7` in this case--will be used as an output by our program. Add the following to your `setup` function:
+5. Before we move on, let's also use the onboard LED wired to pin D7. First, we'll use the `pinMode` function to denote that a given pin (`D7` in this case) will be used as an output by our program. Add the following to your `setup` function:
 
 ```cpp
 pinMode(D7, OUTPUT);
@@ -248,7 +248,7 @@ void loop() {
 }
 ```
 
-The `if` statement is checking to see how long its been since we took a temperature reading. Basically, if 10 seconds have elapsed (our `TEMP_CHECK_INTERVAL` value), we'll set the `lastTempCheck` to a new value and then check the temperature sensor.
+The `if` statement is checking to see how long it's been since we took a temperature reading. Basically, if 10 seconds have elapsed (our `TEMP_CHECK_INTERVAL` value), we'll set the `lastTempCheck` to a new value and then check the temperature sensor.
 
 9. Since our first temp check won't happen in the first 10 seconds, we can add an initial check to our `setup`.
 
@@ -277,7 +277,7 @@ int checkHandler(String command) {
 ```
 
 ::: tip
-For the same of clarity, we've wrapped the existing `checkTemp` function in our cloud function handler. How could you refactor this so we've only have one helper function for local calls and the device cloud?
+For the sake of clarity, we've wrapped the existing `checkTemp` function in our cloud function handler. How could you refactor this so we've only have one helper function for local calls and the device cloud?
 :::
 
 12. Now, flash the firmware to your device and head back to the console. Refresh your device screen and you should now see your `checkTemp` function.
