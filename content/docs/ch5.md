@@ -17,7 +17,7 @@ If you get stuck at any point, [click here](https://go.particle.io/shared_apps/5
 To build this circuit, you'll need the following items:
 
 - Photon in breadboard (this is how it comes in the Maker Kit)
-- 1x Clear cap RGB LED. The RGB
+- 1x Clear cap RGB LED. The RGB LED has four leads the left lead is for the blue light, second for green and the right lead for the red light. The longest lead is the common anode, which we'll connect to our power source.
 
 ![](./images/05/rgbled.jpg)
 
@@ -26,7 +26,7 @@ To build this circuit, you'll need the following items:
 
 ![](./images/05/resistors.jpg)
 
-1. The RGB LED has four leads. One common anode lead, and one each for the red, green and blue diodes inside the LED. Start by plugging the four legs into the first four rows of column J on your breadboard.
+1. The RGB LED has four leads. One common anode lead, and one each for the red, green and blue diodes inside the LED. Start by plugging the four legs into the first four rows of column J on your breadboard. Make sure the LED is oriented where the longest leg, the common anode, is the second from the right before you plug it in.
 
 ![](./images/05/ledpluggedin.jpg)
 
