@@ -17,7 +17,7 @@ module.exports = {
       ],
       ['/docs/ch3', 'Chapter 3: Connecting the Particle Device Cloud to Azure'],
       ['/docs/ch4', 'Chapter 4: Visualizing sensor data in the cloud'],
-      ['/docs/ch4', 'Chapter 5: Controlling your devices from the cloud']
+      ['/docs/ch5', 'Chapter 5: Controlling your devices from the cloud']
     ]
   },
   title: 'Particle Maker Kit Workshop',

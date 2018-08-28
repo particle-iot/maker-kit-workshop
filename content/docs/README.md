@@ -18,6 +18,7 @@ This site contains in-depth lab documents that complement in-person presentation
 2.  Install the Particle [iOS](https://itunes.apple.com/us/app/particle-build-photon-electron/id991459054?ls=1&mt=8) or [Android](https://play.google.com/store/apps/details?id=io.particle.android.app) App
 3.  [Install the Particle CLI](https://docs.particle.io/guide/getting-started/connect/photon/#install-the-particle-cli)
 4.  [Install the Particle Desktop IDE](https://docs.particle.io/guide/tools-and-features/dev/)
+5.  [Create an Azure Account](https://azure.com)
 
 ## Workshop Content
 
