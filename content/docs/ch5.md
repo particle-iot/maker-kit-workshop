@@ -209,7 +209,7 @@ module.exports = function(context, IoTHubMessages) {
 
 ![](./images/05/fun-function-app.png)
 
-This function will be fired every time we receve temperature data. We want to make a call back to our Particle Photon when we receive a temperature update. To do that, we need to make an HTTP call. The `http` package in Node is verbose and tedious, so we're going to install the `request` npm package.
+This function will be fired every time we receve temperature data. We want to make a call back to our Particle Photon when we receive a temperature update. To do that, we need to make an HTTP call. The `http` package in Node is verbose and tedious, so we're going to install the `particle-api-js` npm package.
 
 10. Select the main Function App in the sidebar and then select the "Platform features" option.
 
@@ -255,10 +255,24 @@ Now we're ready to make a request to change the color of the LED. To do that, yo
 var Particle = require('particle-api-js');
 ```
 
-17. Now create a new instance of the Particle API.
+17. Now create a new instance of the Particle API inside of the `module.exports` line.
 
 ```js
-var particle = new Particle();
+var Particle = require('particle-api-js');
+
+module.exports = function(context, IoTHubMessages) {
+  var particle = new Particle();
+
+  context.log(
+    `JavaScript eventhub trigger function called for message array: ${IoTHubMessages}`
+  );
+
+  IoTHubMessages.forEach(message => {
+    context.log(`Processed message: ${message}`);
+  });
+
+  context.done();
+};
 ```
 
 18. Now you need to send an event to the Photon to change the light color. It looks like this...
@@ -283,21 +297,57 @@ particle
   );
 ```
 
-19. That should turn your LED red. Now evaluate the incoming message to see if your temp is less than 90. If so, turn it blue. If it's greater than 90, make it red. Here is the complete code.
+Add this code to your function inside of the loop that checks our IoTHub Messages.
 
 ```js
 var Particle = require('particle-api-js');
 
-var particle = new Particle();
+module.exports = function(context, IoTHubMessages) {
+  var particle = new Particle();
+
+  context.log(
+    `JavaScript eventhub trigger function called for message array: ${IoTHubMessages}`
+  );
+
+  IoTHubMessages.forEach(message => {
+    context.log(`Processed message: ${message}`);
+
+    particle
+      .publishEvent({
+        name: 'setLED',
+        data: 'ff0000',
+        isPrivate: true,
+        auth: '[YOUR ACCESS KEY HERE]'
+      })
+      .then(
+        function(data) {
+          if (data.body.ok) {
+            context.log('Event published succesfully');
+          }
+        },
+        function(err) {
+          context.log('Failed to publish event: ' + err);
+        }
+      );
+  });
+
+  context.done();
+};
+```
+
+19. That should turn your LED red. Now evaluate the incoming message to see if your temp is less than 90. If so, turn it blue. If it's greater than 90, make it red. Here is the complete code.
+
+```js
+var Particle = require('particle-api-js');
 
 module.exports = function(context, IoTHubMessages) {
   context.log(
     `JavaScript eventhub trigger function called for message array: ${IoTHubMessages}`
   );
 
-  IoTHubMessages.forEach(message => {
-    context.log(message);
+  var particle = new Particle();
 
+  IoTHubMessages.forEach(message => {
     // set the color to blue
     let hex = '336699';
 
