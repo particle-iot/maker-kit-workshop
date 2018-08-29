@@ -88,30 +88,6 @@ Now we can complete setting up this integration from the Particle Console.
 
 ![](./images/03/device-in-hub.png)
 
-## Implementing the Event
-
-1.  Now we need to modify our firmware to publish the event each time the temperature is read. Start by creating a new Particle function in `setup`
-
-```cpp
-Particle.function("readSensors", readSensors);
-```
-
-2.  Above `setup`, add the `readSensors` function.
-
-```cpp
-int readSensors(String command) {
-  currentTemp = round((sensor.readTemperature() * 1.8 + 32.00) * 10) / 10;
-  currentHumidity = round((sensor.readHumidity()) * 10) / 10;
-  Particle.publish("env-sensors", "{\"temp\":" + String(currentTemp) + ",\"hu\":" + String(currentHumidity) + "}", PRIVATE);
-
-  return 1;
-}
-```
-
-3.  Head to the dashboard for your device in the console and click "Call" on the `readSensors` funciton. The event name should show up in the list on the left.
-
-![](./images/03/read-sensors.png)
-
 ## Viewing IoT Hub Events
 
 With the event set up, everything should be piping into the Azure IoT hub. We can verify using the [iothub-explorer command line utility](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-explorer-cloud-device-messaging?WT.mc_id=7061727469636c65).
