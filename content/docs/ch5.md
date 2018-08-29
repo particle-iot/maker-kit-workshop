@@ -234,13 +234,101 @@ cd site/wwwroot
 14. We want to install the `request` package from npm that will make our HTTP request a lot easier. Type the following in the prompt...
 
 ```bash
-npm install request
+npm install particle-api-js
 ```
 
-This will install the `request` npm package into your Azure Functions project. It can take a few minutes to finish. It will report an error about there being no `package.json` file, but this is ok. The package is still installed.
+This will install the `particle-api-js` npm package into your Azure Functions project. It can take a few minutes to finish. It will report an error about there being no `package.json` file, but this is ok. The package is still installed.
 
 ![](./images/05/npm-install.png)
 
+Close the tab for the Kudu tools to return to the original Functions project.
+
+Now we're ready to make a request to change the color of the LED. To do that, you are going to need your Particle token.
+
+15. Open a browser tab and navigate to the Particle IDE at [build.particle.com](build.particle.com)
+
+![](./images/05/get-access-token.png)
+
+16. Return to the original Functions project and include the `particle-api-js` package at the top of the project.
+
+```js
+var Particle = require('particle-api-js');
+```
+
+17. Now create a new instance of the Particle API.
+
+```js
+var particle = new Particle();
+```
+
+18. Now you need to send an event to the Photon to change the light color. It looks like this...
+
+```js
+particle
+  .publishEvent({
+    name: 'setLED',
+    data: 'ff0000',
+    isPrivate: true,
+    auth: '[YOUR ACCESS KEY HERE]'
+  })
+  .then(
+    function(data) {
+      if (data.body.ok) {
+        context.log('Event published succesfully');
+      }
+    },
+    function(err) {
+      context.log('Failed to publish event: ' + err);
+    }
+  );
+```
+
+19. That should turn your LED red. Now evaluate the incoming message to see if your temp is less than 90. If so, turn it blue. If it's greater than 90, make it red. Here is the complete code.
+
+```js
+var Particle = require('particle-api-js');
+
+var particle = new Particle();
+
+module.exports = function(context, IoTHubMessages) {
+  context.log(
+    `JavaScript eventhub trigger function called for message array: ${IoTHubMessages}`
+  );
+
+  IoTHubMessages.forEach(message => {
+    context.log(message);
+
+    // set the color to blue
+    let hex = '336699';
+
+    // if the temp
+    if (message.data > 80) {
+      hex = 'ff0000';
+    }
+
+    particle
+      .publishEvent({
+        name: 'setLED',
+        data: hex,
+        isPrivate: true,
+        auth: '210c758918922015c2f98f3155743a9c2fb68567'
+      })
+      .then(
+        function(data) {
+          if (data.body.ok) {
+            context.log('Event published succesfully');
+          }
+        },
+        function(err) {
+          context.log('Failed to publish event: ' + err);
+        }
+      );
+  });
+
+  context.done();
+};
+```
+
 ## Bringing it all together!
 
-- [Test it all out; LED should be blue(?) at first; Dunk the sensor in a glass of hot or cold water and watch it change]
+- [Test it all out; LED should be blue(?) at first; Dunk the sensor in a glass of hot water and watch it change]
