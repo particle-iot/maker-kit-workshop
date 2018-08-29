@@ -139,7 +139,107 @@ Now that we have everything wired up on our device, lets publish events from the
 
 ## Processing sensor data in Azure and publishing events
 
-- [Process the incoming event and fire an event back to the device]
+We can use Azure to process sensor events as they come in to IoT Hub. We can really do anything we want with the data once it's in Azure. That's the magic of the cloud. Let's setup an Azure Function which fires each time the temperature changes and then calls back to the Particle Cloud with the color to change the RBG bulb to.
+
+### Add new Consumer Group
+
+Each time you add a new endpoint or service which will interact with IoT Hub, it's a best practice to give that it's own Consumer Group. We're going to wire up an Azure Function, so let's create a new Consumer Group in IoT Hub for this Serverless Function.
+
+1. In your IoT Hub, select the "Events"
+
+![](./images/05/event-hub-endpoint-events.png)
+
+2. Create a new Consumer Group called "function". Don't forget to click "save".
+
+![](./images/05/new-consumer-group.png)
+
+### Create a new Azure Function
+
+Azure Functions are the Azure Serverless platform. It allows you to write Node functions that run in the cloud without having to deploy Node or any runtime at all. You just write your code and let it run.
+
+1. Create a new resource in Azure and select "Function App".
+
+![](./images/05/new-function-app.png)
+
+2. Name it "ParticleFunctionApp" and select whichever Resource Group you have been using so far. Click the "Create" button at the bottom.
+
+When you create a new resource in Azure, you can find it under the bell icon in the right-hand corner. You will be notified when the resource is created. It's a good idea to click the "Add to dashboard" button at that time.
+
+![](./images/05/pin-to-dashboard.png)
+
+3. In your new Function App, click the + button next to "Functions" in the sidebar, then change the language to "JavaScript" and select "Custom Function".
+
+![](./images/05/new-function-screen.png)
+
+4. Scroll down until you see the "IoT Hub (Event Hub)" card. Select "JavaScript" on that card.
+
+![](./images/05/custom-function-types.png)
+
+5. Name it "particle_event_hub_function" and select "new" under the "Event Hub Connection" option.
+
+![](./images/05/function-iot-hub-config.png)
+
+6. Select your IoT Hub in the dropdown list and leave the Endpoint at "Events (built-in endpoint)"
+
+![](./images/05/new-event-hub-connection.png)
+
+7. Set the Consumer Group to "function" and the Event Hub Name to the name of your IoT Hub. Click "Create".
+
+![](./images/05/new-event-hub-connection.png)
+
+Your new Azure Function will be loaded up.
+
+8. Change the code for your function so that the message is stringified
+
+```js
+module.exports = function(context, IoTHubMessages) {
+  context.log(
+    `JavaScript eventhub trigger function called for message array: ${IoTHubMessages}`
+  );
+
+  IoTHubMessages.forEach(message => {
+    context.log(`Processed message: ${JSON.stringify(message)}`);
+  });
+
+  context.done();
+};
+```
+
+9. Hit the "Run" button to run your function. Every ten seconds you should see your temperature come through as the "data" property in the console.
+
+![](./images/05/fun-function-app.png)
+
+This function will be fired every time we receve temperature data. We want to make a call back to our Particle Photon when we receive a temperature update. To do that, we need to make an HTTP call. The `http` package in Node is verbose and tedious, so we're going to install the `request` npm package.
+
+10. Select the main Function App in the sidebar and then select the "Platform features" option.
+
+![](./images/05/function-app-settings.png)
+
+11. Select the "Advanced Tools (Kudu)" option.
+
+![](./images/05/found-kudu.png)
+
+12. Select the "Debug Console" and the "CMD" options.
+
+![](./images/05/kudu-cmd.png)
+
+13. In the prompt that comes up, switch to the `site/wwwroot` directory
+
+```bash
+cd site/wwwroot
+```
+
+![](./images/05/change-to-wwwroot.png)
+
+14. We want to install the `request` package from npm that will make our HTTP request a lot easier. Type the following in the prompt...
+
+```bash
+npm install request
+```
+
+This will install the `request` npm package into your Azure Functions project. It can take a few minutes to finish. It will report an error about there being no `package.json` file, but this is ok. The package is still installed.
+
+![](./images/05/npm-install.png)
 
 ## Bringing it all together!
 
