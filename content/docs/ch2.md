@@ -173,7 +173,7 @@ In an embedded application, we light up an LED by calling `digitalWrite` ane set
 
 ![](./images/02/devicesTab.png)
 
-8. Find your Photon and click the star icon next to the name to select it as your current device.
+8. Find your Photon. If you only have a single device, it will be selected by default and you can skip to the next step. If you have mutiple, click the star icon next to the name of your new Photon to select it as your current device.
 
 ![](./images/02/activeDevice.png)
 
