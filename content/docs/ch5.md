@@ -147,7 +147,7 @@ Each time you add a new endpoint or service which will interact with IoT Hub, it
 
 1. In your IoT Hub, select the "Events"
 
-![](./images/05/event-hub-endpoint-events.png)
+![](./images/05/event-hub-endpoints-events.png)
 
 2. Create a new Consumer Group called "function". Don't forget to click "save".
 
@@ -191,7 +191,7 @@ Your new Azure Function will be loaded up.
 
 8. Change the code for your function so that the message is stringified
 
-```js
+```javascript
 module.exports = function(context, IoTHubMessages) {
   context.log(
     `JavaScript eventhub trigger function called for message array: ${IoTHubMessages}`
@@ -251,13 +251,13 @@ Now we're ready to make a request to change the color of the LED. To do that, yo
 
 16. Return to the original Functions project and include the `particle-api-js` package at the top of the project.
 
-```js
+```javascript
 var Particle = require('particle-api-js');
 ```
 
 17. Now create a new instance of the Particle API inside of the `module.exports` line.
 
-```js
+```javascript
 var Particle = require('particle-api-js');
 
 module.exports = function(context, IoTHubMessages) {
@@ -277,7 +277,7 @@ module.exports = function(context, IoTHubMessages) {
 
 18. Now you need to send an event to the Photon to change the light color. It looks like this...
 
-```js
+```javascript
 particle
   .publishEvent({
     name: 'setLED',
@@ -299,7 +299,7 @@ particle
 
 Add this code to your function inside of the loop that checks our IoTHub Messages.
 
-```js
+```javascript
 var Particle = require('particle-api-js');
 
 module.exports = function(context, IoTHubMessages) {
@@ -337,7 +337,7 @@ module.exports = function(context, IoTHubMessages) {
 
 19. That should turn your LED red. Now evaluate the incoming message to see if your temp is less than 90. If so, turn it blue. If it's greater than 90, make it red. Here is the complete code.
 
-```js
+```javascript
 var Particle = require('particle-api-js');
 
 module.exports = function(context, IoTHubMessages) {
