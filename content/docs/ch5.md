@@ -207,7 +207,7 @@ module.exports = function(context, IoTHubMessages) {
 
 9. Hit the "Run" button to run your function. Every ten seconds you should see your temperature come through as the "data" property in the console.
 
-![](./images/05/fun-function-app.png)
+![](./images/05/run-function-app.png)
 
 This function will be fired every time we receve temperature data. We want to make a call back to our Particle Photon when we receive a temperature update. To do that, we need to make an HTTP call. The `http` package in Node is verbose and tedious, so we're going to install the `particle-api-js` npm package.
 
