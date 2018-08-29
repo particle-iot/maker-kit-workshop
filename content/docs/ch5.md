@@ -378,7 +378,3 @@ module.exports = function(context, IoTHubMessages) {
   context.done();
 };
 ```
-
-## Bringing it all together!
-
-- [Test it all out; LED should be blue(?) at first; Dunk the sensor in a glass of hot water and watch it change]
